@@ -9,5 +9,11 @@
 2.2版本增加了画质调节选项,低画质在手机能流程运行
 
 
+![a9db0f0ef54ed3e974fda2fc6a1588fa](https://github.com/user-attachments/assets/d36f06fb-f009-4061-86e8-9fc785f27039)
 
-![Uploading a9db0f0ef54ed3e974fda2fc6a1588fa.jpg…]()
+![a078c26b3e092397aaee41e9f39feb9b_720](https://github.com/user-attachments/assets/069ec0ce-3376-4eb3-8896-22a17c63a456)
+
+
+![43ded48723f285dde2469fa58868a060_720](https://github.com/user-attachments/assets/84bba0ae-e8cc-4ce3-963b-a0bca8112d90)
+
+
