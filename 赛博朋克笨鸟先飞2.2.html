@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>霓虹飞跃：夜之城 | Cyberpunk Flappy Dive</title>
-    <!-- 字体引入 -->
+    <title>霓虹飞跃：夜之城 | Cyberpunk Flappy Dive 3.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* =========================================
+           功能说明：全局样式与基础重置
+           ========================================= */
         body, html {
             margin: 0;
             padding: 0;
@@ -20,7 +22,7 @@
             user-select: none;
         }
 
-        /* 游戏容器 */
+        /* 游戏主容器 */
         #game-container {
             position: relative;
             width: 100%;
@@ -33,7 +35,9 @@
             height: 100%;
         }
 
-        /* 扫描线效果 */
+        /* =========================================
+           功能说明：视觉特效层
+           ========================================= */
         .scanlines {
             position: absolute;
             top: 0;
@@ -53,7 +57,6 @@
             animation: scrollLines 10s linear infinite;
         }
 
-        /* 暗角效果 */
         .vignette {
             position: absolute;
             top: 0;
@@ -65,7 +68,7 @@
             z-index: 11;
         }
 
-        /* UI 层布局 */
+        /* UI 层容器 - 关键层级 */
         #ui-layer {
             position: absolute;
             top: 0;
@@ -77,23 +80,25 @@
             justify-content: center;
             align-items: center;
             z-index: 20;
-            pointer-events: none; /* 点击穿透 */
+            pointer-events: none; /* 默认穿透，子元素需设置 auto */
             text-align: center;
             color: #0ff;
             text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
         }
         
-        /* 游戏结束界面 */
         #game-over-screen {
             display: none;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 30px;
             width: 100%;
             pointer-events: auto;
+            padding-bottom: 20px;
         }
 
-        /* 暂停/配置界面 */
+        /* =========================================
+           功能说明：配置菜单样式
+           ========================================= */
         #pause-screen {
             display: none;
             pointer-events: auto;
@@ -111,7 +116,6 @@
             text-align: left;
         }
         
-        /* 滚动条样式 */
         #pause-screen::-webkit-scrollbar {
             width: 6px;
         }
@@ -149,7 +153,6 @@
             font-weight: bold;
         }
 
-        /* 滑块样式 */
         input[type=range] {
             -webkit-appearance: none;
             width: 100%;
@@ -179,7 +182,6 @@
             background: #0ff;
         }
         
-        /* 复选框样式 */
         .cyber-checkbox {
             appearance: none;
             background-color: transparent;
@@ -219,7 +221,9 @@
             margin-top: 10px;
         }
 
-        /* 故障文字效果 */
+        /* =========================================
+           功能说明：文字动画特效
+           ========================================= */
         .glitch-text {
             font-size: 4rem;
             font-weight: 900;
@@ -227,7 +231,6 @@
             animation: glitch 1s infinite;
         }
 
-        /* 标题文字效果 */
         .glitch-rainbow-text {
             font-size: 4rem;
             font-weight: 900;
@@ -243,7 +246,6 @@
             animation: pulse 2s infinite;
         }
 
-        /* 边框变色动画 */
         @keyframes rainbow-cycle {
             0% { color: #ff0055; border-color: #ff0055; text-shadow: 0 0 10px #ff0055; box-shadow: 0 0 10px rgba(255, 0, 85, 0.3); }
             16% { color: #ffaa00; border-color: #ffaa00; text-shadow: 0 0 10px #ffaa00; box-shadow: 0 0 10px rgba(255, 170, 0, 0.3); }
@@ -255,7 +257,6 @@
             100% { color: #ff0055; border-color: #ff0055; text-shadow: 0 0 10px #ff0055; box-shadow: 0 0 10px rgba(255, 0, 85, 0.3); }
         }
 
-        /* 纯文字变色动画 */
         @keyframes text-rainbow-cycle {
             0% { color: #ff0055; text-shadow: 0 0 20px #ff0055; }
             16% { color: #ffaa00; text-shadow: 0 0 20px #ffaa00; }
@@ -267,14 +268,15 @@
             100% { color: #ff0055; text-shadow: 0 0 20px #ff0055; }
         }
 
-        /* 变色文字类 */
         .rainbow-text {
             font-size: 2.5rem;
             font-weight: bold;
             animation: text-rainbow-cycle 3s linear infinite;
         }
 
-        /* 计分板样式 */
+        /* =========================================
+           功能说明：HUD 界面 (分数、能量)
+           ========================================= */
         .score-display {
             position: absolute;
             top: 20px;
@@ -290,6 +292,21 @@
             letter-spacing: 2px;
             transition: transform 0.1s;
             animation: rainbow-cycle 4s linear infinite;
+        }
+        
+        .score-glitch {
+            animation: score-glitch-anim 0.2s infinite;
+            filter: blur(1px);
+            text-shadow: 2px 0 0 #ff00ff, -2px 0 0 #00ffff;
+        }
+
+        @keyframes score-glitch-anim {
+            0% { transform: translate(1px, 1px); opacity: 0.9; }
+            20% { transform: translate(-1px, 0); opacity: 0.85; }
+            40% { transform: translate(0, 2px); opacity: 0.95; }
+            60% { transform: translate(1px, -1px); opacity: 0.8; }
+            80% { transform: translate(-2px, 0); opacity: 0.92; }
+            100% { transform: translate(1px, 1px); opacity: 0.9; }
         }
 
         .score-active {
@@ -313,7 +330,64 @@
             letter-spacing: 1px;
         }
 
-        /* 按钮通用样式 */
+        .energy-bar-container {
+            position: absolute;
+            top: 130px; 
+            left: 20px;
+            width: 180px;
+            height: 12px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #0ff;
+            transform: skewX(-20deg);
+            z-index: 30;
+            pointer-events: none;
+            display: none; 
+        }
+
+        .energy-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #f0f, #0ff);
+            transition: width 0.1s linear;
+            box-shadow: 0 0 8px #f0f;
+        }
+
+        .energy-text {
+            position: absolute;
+            right: 5px;
+            top: -16px;
+            font-size: 0.7rem;
+            color: #0ff;
+            font-weight: bold;
+            transform: skewX(20deg);
+            text-shadow: 0 0 5px #000;
+        }
+
+        .fever-overlay-text {
+            position: absolute;
+            top: 30%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 5rem;
+            font-weight: 900;
+            color: #ffff00;
+            text-shadow: 5px 5px 0 #ff0055, -5px -5px 0 #00ffff;
+            animation: fever-pulse 0.1s infinite;
+            z-index: 50;
+            pointer-events: none;
+            display: none;
+        }
+        
+        @keyframes fever-pulse {
+            0% { transform: scale(1) skewX(-10deg); opacity: 1; }
+            50% { transform: scale(1.1) skewX(10deg); opacity: 0.8; }
+            100% { transform: scale(1) skewX(-10deg); opacity: 1; }
+        }
+
+        /* =========================================
+           功能说明：交互按钮与控制
+           ========================================= */
         .btn-prompt {
             padding: 15px 40px;
             border: 2px solid #0ff;
@@ -325,7 +399,7 @@
             letter-spacing: 2px;
             box-shadow: 0 0 15px #0ff;
             cursor: pointer;
-            pointer-events: auto;
+            pointer-events: auto; /* 关键：强制接收点击 */
             transition: all 0.1s;
             position: relative;
             overflow: hidden;
@@ -341,7 +415,6 @@
             transform: scale(0.95);
         }
         
-        /* 模式选择容器 */
         .mode-select-container {
             display: flex;
             gap: 20px;
@@ -350,7 +423,6 @@
             flex-wrap: wrap;
         }
 
-        /* 模式按钮样式 */
         .mode-btn {
             padding: 12px 25px;
             font-size: 1rem;
@@ -359,6 +431,7 @@
             color: #0ff;
             box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
             transition: all 0.2s;
+            pointer-events: auto; /* 关键：修复开始按钮无法点击的问题 */
         }
         
         .mode-btn:hover {
@@ -368,7 +441,6 @@
             box-shadow: 0 0 20px #0ff;
         }
 
-        /* 小号按钮样式 */
         .btn-small {
             padding: 8px 20px;
             font-size: 0.9rem;
@@ -376,6 +448,7 @@
             color: #f0f;
             background: rgba(20, 0, 20, 0.8);
             box-shadow: 0 0 10px #f0f;
+            pointer-events: auto;
         }
         .btn-small:hover {
             background: #f0f;
@@ -391,7 +464,6 @@
             display: none;
         }
 
-        /* 设置图标样式 */
         .settings-icon {
             position: absolute;
             top: 20px;
@@ -416,10 +488,6 @@
             box-shadow: 0 0 20px #0ff;
         }
 
-        .settings-icon:hover svg {
-            stroke: #000;
-        }
-
         .settings-icon svg {
             width: 24px;
             height: 24px;
@@ -429,7 +497,6 @@
             transition: stroke 0.2s;
         }
 
-        /* 顶部链接样式 */
         .cyber-link {
             position: absolute;
             top: 25px;
@@ -457,7 +524,6 @@
             text-shadow: none;
         }
 
-        /* 底部署名样式 */
         .dev-credit {
             position: absolute;
             bottom: 20px;
@@ -472,7 +538,6 @@
             font-weight: 300;
         }
 
-        /* 符号呼吸效果 */
         .breath-symbol {
             display: inline-block;
             color: #0ff;
@@ -485,7 +550,6 @@
             50% { opacity: 0.8; transform: scale(1.1); text-shadow: 0 0 8px rgba(0, 255, 255, 0.8); }
         }
 
-        /* 逐字显示动画 */
         .typewriter-text span {
             opacity: 0;
             color: #f0f;
@@ -508,21 +572,18 @@
             100% { opacity: 0; }
         }
 
-        /* 边框脉冲 */
         @keyframes pulse-border {
             0% { box-shadow: 0 0 5px #0ff; }
             50% { box-shadow: 0 0 15px #0ff; }
             100% { box-shadow: 0 0 5px #0ff; }
         }
 
-        /* 透明度脉冲 */
         @keyframes pulse {
             0% { opacity: 0.7; }
             50% { opacity: 1; }
             100% { opacity: 0.7; }
         }
 
-        /* 故障动画 */
         @keyframes glitch {
             0% { transform: translate(0) }
             20% { transform: translate(-2px, 2px) }
@@ -532,13 +593,11 @@
             100% { transform: translate(0) }
         }
 
-        /* 扫描线动画 */
         @keyframes scrollLines {
             0% { background-position: 0 0; }
             100% { background-position: 0 100%; }
         }
         
-        /* 道具消息提示 */
         .powerup-msg {
             position: absolute;
             font-size: 1.5rem;
@@ -555,7 +614,6 @@
             100% { opacity: 0; transform: translateY(-50px) scale(1.5); }
         }
         
-        /* 新纪录闪光 */
         .new-record-flash {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -570,7 +628,6 @@
             100% { opacity: 0; }
         }
 
-        /* 移动端适配 */
         @media (max-width: 600px) {
             .glitch-text, .glitch-rainbow-text { font-size: 2.5rem; }
             .score-display { font-size: 1.5rem; top: 10px; left: 10px; }
@@ -580,7 +637,6 @@
             .settings-icon { top: 10px; right: 10px; }
             .mode-select-container { flex-direction: column; gap: 15px; }
             
-            /* 移动端样式调整 */
             .cyber-link { 
                 top: 85px; 
                 font-size: 0.65rem; 
@@ -592,6 +648,8 @@
             } 
             
             .dev-credit { font-size: 0.8rem; bottom: 15px; }
+            
+            .energy-bar-container { top: 110px; left: 10px; width: 140px; } 
         }
     </style>
 </head>
@@ -599,17 +657,26 @@
 
     <div id="game-container">
         <canvas id="gameCanvas"></canvas>
+        
         <div class="scanlines"></div>
         <div class="vignette"></div>
         <div id="pause-overlay" class="pause-overlay"></div>
         
         <div id="score-container" class="score-display">
             <span class="score-label">SCORE_SYNC</span>
-            <span id="score-val">000</span>
+            <span id="score-val">000</span> 
             <span id="highscore-val" class="highscore-label">BEST: 000</span>
         </div>
 
-        <!-- 设置图标 -->
+        <div id="energy-bar" class="energy-bar-container">
+            <div id="energy-fill" class="energy-bar-fill"></div>
+            <span class="energy-text">ENERGY 0%</span>
+        </div>
+
+        <div id="fever-overlay" class="fever-overlay-text">
+            FEVER MODE
+        </div>
+
         <div id="settings-btn" class="settings-icon" onclick="togglePause()">
             <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="3"></circle>
@@ -619,12 +686,10 @@
 
         <div id="ui-layer">
             <div id="start-screen">
-                <!-- 游戏主页链接 (已修改) -->
-                <a href="https://github.com/caozhaofeng/-Cyberpunk-Flappy-Dive" target="_blank" class="cyber-link">游戏主页:Cyberpunk-Flappy-Dive</a>
+                <a href="https://github.com/caozhaofeng/-Cyberpunk-Flappy-Dive" target="_blank" class="cyber-link">游戏主页: Cyberpunk-Flappy-Dive</a>
 
                 <h1 class="glitch-rainbow-text" data-text="CYBER DIVE">CYBER DIVE</h1>
                 
-                <!-- 模式选择面板 -->
                 <div id="mode-select-panel">
                     <p class="sub-text">选择操作模式启动引擎</p>
                     <div class="mode-select-container">
@@ -633,7 +698,6 @@
                     </div>
                 </div>
 
-                <!-- 开始提示面板 -->
                 <div id="start-prompt-panel" style="display: none;">
                     <p class="sub-text" style="margin-top: 20px;">点击屏幕或按空格起飞</p>
                     <div class="sub-text" style="font-size: 0.8rem; color: #0ff; margin-top:5px; animation: pulse 1s infinite;">SYSTEM READY</div>
@@ -642,7 +706,6 @@
                 <div class="sub-text" style="font-size: 0.8rem; color: #aaa; margin-top:15px;">物理引擎已校准 - 悬浮模式</div>
                 <div class="sub-text" style="font-size: 0.7rem; color: #0ff; margin-top:5px;">[ESC] 或右上角图标 呼出系统配置</div>
                 
-                <!-- 开发人员署名 -->
                 <div class="dev-credit">
                     —— <span class="breath-symbol">◇</span> 开发单元：<span class="typewriter-text"><span>逐</span><span>辰</span><span>十</span><span>七</span></span> <span class="breath-symbol">◇</span> ——
                 </div>
@@ -657,33 +720,35 @@
 
                 <p id="final-score" class="rainbow-text">最终得分: 000</p>
                 
-                <!-- 战绩分享按钮 -->
-                <button class="btn-prompt btn-small" style="margin-bottom: 10px; border-color: #f0f; color: #f0f;" onclick="shareScore()">生成战报 COPY LOG</button>
-                
-                <!-- 返回标题按钮 -->
                 <button id="restart-btn" class="btn-prompt" onclick="returnToTitle()">重新连接系统</button>
             </div>
 
-            <!-- 配置菜单 -->
             <div id="pause-screen">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h2 style="color: #0ff; font-size: 1.3rem; text-shadow: 0 0 10px #0ff;">SYSTEM CONFIG</h2>
                     <div style="font-size: 0.8rem; color: #f0f; animation: pulse 1s infinite;">// PAUSED //</div>
                 </div>
                 
-                <!-- 功能开关 -->
                 <div class="config-row" style="margin-top: 10px; border: 1px solid #0ff; padding: 10px; background: rgba(0, 255, 255, 0.1);">
                     <label class="config-label" style="font-size: 1rem; color: #fff;">无敌模式 GOD MODE</label>
                     <input type="checkbox" id="cfg-godMode" class="cyber-checkbox">
                 </div>
+
+                <div class="config-row" style="margin-top: 5px; border: 1px solid #ff0055; padding: 10px; background: rgba(255, 0, 85, 0.1);">
+                    <label class="config-label" style="font-size: 1rem; color: #fff;">连发模式 RAPID FIRE</label>
+                    <input type="checkbox" id="cfg-autoFire" class="cyber-checkbox">
+                </div>
                 
-                <!-- 背景音乐开关 -->
                 <div class="config-row" style="margin-top: 5px; border: 1px solid #f0f; padding: 10px; background: rgba(255, 0, 255, 0.1);">
                     <label class="config-label" style="font-size: 1rem; color: #fff;">背景音乐 BGM SYSTEM</label>
                     <input type="checkbox" id="cfg-bgm" class="cyber-checkbox">
                 </div>
+                
+                <div class="config-row" style="margin-top: 5px; border: 1px solid #ffff00; padding: 10px; background: rgba(255, 255, 0, 0.1);">
+                    <label class="config-label" style="font-size: 1rem; color: #fff;">画质 QUALITY (HIGH/PERF)</label>
+                    <input type="checkbox" id="cfg-quality" class="cyber-checkbox" checked>
+                </div>
 
-                <!-- 动力学参数 -->
                 <div class="config-section-title">DRONE DYNAMICS</div>
                 
                 <div class="config-group">
@@ -701,7 +766,6 @@
                     <input type="range" id="cfg-jump" min="2.0" max="8.0" step="0.1" value="4.0">
                 </div>
 
-                <!-- 环境参数 -->
                 <div class="config-section-title">ENVIRONMENT</div>
 
                 <div class="config-group">
@@ -738,9 +802,13 @@
     </div>
 
     <script>
-        // --- 系统变量 ---
+        // =========================================
+        // 功能说明：全局 DOM 元素引用与 Canvas 初始化
+        // =========================================
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d', { alpha: false });
+        
+        // UI 元素引用
         const uiLayer = document.getElementById('ui-layer');
         const startScreen = document.getElementById('start-screen');
         const modeSelectPanel = document.getElementById('mode-select-panel');
@@ -754,55 +822,35 @@
         const highscoreValEl = document.getElementById('highscore-val');
         const finalScoreEl = document.getElementById('final-score');
         const restartBtn = document.getElementById('restart-btn');
-
-        // --- 默认PC端配置 (PC) ---
-        const pcConfig = {
-            playerX: 80,
-            gravity: 0.15,
-            jumpForce: 4.0,
-            initialSpeed: 3.0,
-            speedIncrement: 0.2, 
-            pipeGap: 170,
-            obstacleDistance: 360,
-            godMode: false,
-            bgmEnabled: false // 默认关闭BGM
-        };
-
-        // --- 移动端配置 ---
-        const mobileConfig = {
-            playerX: 60,
-            gravity: 0.12,
-            jumpForce: 3.5,
-            initialSpeed: 2.2,
-            speedIncrement: 0.15,
-            pipeGap: 190,
-            obstacleDistance: 400,
-            godMode: false,
-            bgmEnabled: false
-        };
-
-        // --- 全局配置 ---
-        let gameConfig = { ...pcConfig };
-        let currentMode = 'PC';
-
-        let width, height;
-        let frames = 0;
-        let score = 0;
-        let highScore = parseInt(localStorage.getItem('cyber_highscore')) || 0;
-        highscoreValEl.innerText = `BEST: ${highScore.toString().padStart(3, '0')}`;
         
-        let gameState = 'MODE_SELECT'; 
-        let lastGameState = 'MODE_SELECT';
+        // 游戏状态 UI 引用
+        const energyBarContainer = document.getElementById('energy-bar');
+        const energyFill = document.getElementById('energy-fill');
+        const feverOverlay = document.getElementById('fever-overlay');
         
-        let gameSpeed = gameConfig.initialSpeed;
-        let time = 0; 
+        // =========================================
+        // 功能说明：配色方案与视觉主题配置
+        // =========================================
+        const COLOR_SCHEMES = [
+            { bg_dark: '#020205', bg_light: '#1a0b2e', grid_color: 'rgba(255, 0, 255, 0.3)', building1: '#0a0a20', building2: '#151530', building3: '#202040' },
+            { bg_dark: '#010502', bg_light: '#0a1d1d', grid_color: 'rgba(0, 255, 0, 0.4)', building1: '#051505', building2: '#0a250a', building3: '#153015' },
+            { bg_dark: '#0d0202', bg_light: '#300a0a', grid_color: 'rgba(255, 100, 0, 0.4)', building1: '#200505', building2: '#351005', building3: '#451505' },
+            { bg_dark: '#010408', bg_light: '#0a1a2e', grid_color: 'rgba(100, 200, 255, 0.5)', building1: '#051020', building2: '#101530', building3: '#152045' },
+            { bg_dark: '#10100a', bg_light: '#252010', grid_color: 'rgba(255, 255, 0, 0.3)', building1: '#202015', building2: '#303020', building3: '#404025' },
+            { bg_dark: '#030303', bg_light: '#0f0f12', grid_color: 'rgba(255, 255, 255, 0.3)', building1: '#101015', building2: '#181018', building3: '#252530' },
+            { bg_dark: '#0c0005', bg_light: '#300010', grid_color: 'rgba(255, 0, 85, 0.5)', building1: '#250510', building2: '#351015', building3: '#451520' },
+            { bg_dark: '#00050a', bg_light: '#05202a', grid_color: 'rgba(0, 255, 150, 0.4)', building1: '#001010', building2: '#051520', building3: '#102030' },
+            { bg_dark: '#000000', bg_light: '#101005', grid_color: 'rgba(255, 215, 0, 0.5)', building1: '#151505', building2: '#202010', building3: '#303015' },
+            { bg_dark: '#000505', bg_light: '#0a2020', grid_color: 'rgba(0, 255, 255, 0.5)', building1: '#001010', building2: '#051515', building3: '#102525' },
+            { bg_dark: '#0d0007', bg_light: '#300a20', grid_color: 'rgba(255, 105, 180, 0.5)', building1: '#200510', building2: '#351020', building3: '#451530' },
+            { bg_dark: '#050205', bg_light: '#1a0d1a', grid_color: 'rgba(255, 255, 0, 0.5)', building1: '#100510', building2: '#181018', building3: '#201520' },
+        ];
         
-        // 道具状态
-        let shieldActive = false;
-        let slowMotionActive = false;
-        let slowMotionTimer = 0;
+        let currentScheme = COLOR_SCHEMES[0];
+        let schemeIndex = 0;
+        let scoreColorChangeThreshold = 30; 
+        const COLOR_CHANGE_STEP = 30;
 
-        // 颜色配置
         const neonColors = [
             '#ff0055', '#ffaa00', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff', '#ffffff', 
             '#39ff14', '#ff1493', '#9400d3', '#00ced1', '#ff4500', '#adff2f', '#ff69b4', '#1e90ff', 
@@ -815,7 +863,279 @@
             return neonColors[Math.floor(Math.random() * neonColors.length)];
         }
 
-        // --- 模式启动逻辑 ---
+        // =========================================
+        // 功能说明：数码酸雨环境特效系统
+        // =========================================
+        const rainSystem = {
+            isActive: false,
+            drops: [],
+            obstaclesToLast: 0,
+            
+            start: function() {
+                this.isActive = true;
+                this.obstaclesToLast = 10; 
+            },
+            
+            stop: function() {
+                this.isActive = false;
+            },
+            
+            update: function(dt) {
+                if (!this.isActive && Math.random() < 0.0005 && gameState === 'PLAYING') {
+                    this.start();
+                }
+                
+                if (this.isActive) {
+                    // 性能优化：低画质下雨量减半
+                    const baseRate = isFeverMode ? 8 : 4; 
+                    const spawnRate = gameConfig.quality === 'HIGH' ? baseRate : Math.ceil(baseRate / 2);
+                    
+                    for(let i=0; i<spawnRate; i++) {
+                        this.drops.push(new RainDrop());
+                    }
+                }
+                
+                for (let i = this.drops.length - 1; i >= 0; i--) {
+                    const drop = this.drops[i];
+                    drop.update(dt);
+                    if (drop.markedForDeletion) {
+                        this.drops.splice(i, 1);
+                    }
+                }
+            },
+            
+            draw: function() {
+                ctx.save();
+                this.drops.forEach(drop => drop.draw());
+                ctx.restore();
+            },
+            
+            decrementCounter: function() {
+                if (this.isActive) {
+                    this.obstaclesToLast--;
+                    if (this.obstaclesToLast <= 0) {
+                        this.stop();
+                    }
+                }
+            }
+        };
+
+        class RainDrop {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = -50;
+                this.length = Math.random() * 20 + 10;
+                this.width = Math.random() * 1.5 + 0.5;
+                this.speed = Math.random() * 10 + 15;
+                this.color = getRandomNeonColor();
+                this.markedForDeletion = false;
+            }
+            
+            update(dt) {
+                this.y += this.speed * dt;
+                this.x -= (gameSpeed * 0.2) * dt; 
+                
+                if (this.y > height) {
+                    this.splash(this.y);
+                    this.markedForDeletion = true;
+                    return;
+                }
+                
+                for(let ob of obstacles) {
+                    if (this.x > ob.x && this.x < ob.x + pipeWidth) {
+                        if (this.y > ob.bottomY && this.y < ob.bottomY + (this.speed * dt)) {
+                            this.splash(ob.bottomY);
+                            this.markedForDeletion = true;
+                            return;
+                        }
+                    }
+                }
+            }
+            
+            splash(yPos) {
+                // 性能优化：低画质下不产生飞溅粒子
+                if (gameConfig.quality !== 'HIGH') return;
+
+                for(let i=0; i<3; i++) {
+                    particles.push(new Particle(
+                        this.x, 
+                        yPos, 
+                        this.color, 
+                        3, 
+                        Math.random() * 2 + 1, 
+                        (Math.random() - 0.5) * 4, 
+                        Math.random() * -3 - 2, 
+                        0.1 
+                    ));
+                }
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = 0.6;
+                ctx.fillRect(this.x, this.y, this.width, this.length);
+                ctx.globalAlpha = 1.0;
+            }
+        }
+        
+        // =========================================
+        // 功能说明：环境装饰物 - 悬浮车实体
+        // =========================================
+        const hovercars = [];
+        class Hovercar {
+            constructor() {
+                this.y = Math.random() * (height * 0.4) + 50; 
+                this.x = width + 50;
+                this.w = Math.random() * 80 + 40;
+                this.h = Math.random() * 6 + 2;
+                this.speed = Math.random() * 5 + 7;
+                this.color = getRandomNeonColor();
+                this.alpha = Math.random() * 0.4 + 0.3;
+                this.markedForDeletion = false;
+            }
+            update(dt) {
+                this.x -= (this.speed + gameSpeed * 0.5) * dt; 
+                if (this.x + this.w < 0) this.markedForDeletion = true;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                
+                // 优化：仅在高画质下启用光晕
+                if (gameConfig.quality === 'HIGH') {
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = this.color;
+                }
+                
+                ctx.fillRect(this.x, this.y, this.w, this.h);
+                ctx.shadowBlur = 0;
+                ctx.restore();
+            }
+        }
+        
+        // =========================================
+        // 功能说明：输入处理逻辑与连发控制
+        // =========================================
+        let isInputHeld = false;
+        let inputHoldInterval = null;
+        const INPUT_REPEAT_RATE = 100; 
+        
+        function triggerJump() {
+            if (gameState === 'PLAYING') {
+                player.velocity = -player.jump; 
+                player.changeColor(); 
+                sound.jump();
+                
+                // 优化：低画质下尾焰粒子减少
+                const count = gameConfig.quality === 'HIGH' ? 5 : 2;
+                for(let i=0; i<count; i++) {
+                    particles.push(new Particle(player.x - 10, player.y, player.currentTrailColor, 2));
+                }
+            }
+        }
+
+        function emitIntenseTrailParticles() {
+            if (gameState === 'PLAYING' && isInputHeld && gameConfig.autoFire) {
+                // 优化：低画质下粒子减少
+                const particleCount = isFeverMode ? (gameConfig.quality === 'HIGH' ? 10 : 5) : (gameConfig.quality === 'HIGH' ? 8 : 4);
+                for (let i = 0; i < particleCount; i++) {
+                    const color = getRandomNeonColor(); 
+                    const vx = Math.random() * -3 - 1;
+                    const vy = Math.random() * 2 - 1;
+                    const size = Math.random() * 3 + 1;
+                    particles.push(new Particle(player.x - 12, player.y, color, 4, size, vx, vy, 0.03));
+                }
+            }
+        }
+
+        // =========================================
+        // 功能说明：游戏配置与默认参数定义
+        // =========================================
+        
+        // PC端配置：默认开启连发，目标帧率 120，高画质
+        const pcConfig = {
+            playerX: 80,
+            gravity: 0.15,
+            jumpForce: 4.0,
+            initialSpeed: 3.0,
+            speedIncrement: 0.2, 
+            pipeGap: 180,
+            obstacleDistance: 400,
+            godMode: false,
+            bgmEnabled: true,
+            autoFire: true,
+            targetFPS: 120,
+            quality: 'HIGH' // 默认为高画质
+        };
+
+        // 移动端配置：默认关闭连发，目标帧率 60，低画质
+        const mobileConfig = {
+            playerX: 60,
+            gravity: 0.12,
+            jumpForce: 3.5,
+            initialSpeed: 2.2,
+            speedIncrement: 0.15,
+            pipeGap: 200,
+            obstacleDistance: 400,
+            godMode: false,
+            bgmEnabled: true,
+            autoFire: false,
+            targetFPS: 60,
+            quality: 'LOW' // 默认为性能优先画质
+        };
+
+        let gameConfig = { ...pcConfig };
+        let currentMode = 'PC';
+        let width, height;
+        let frames = 0;
+        let score = 0;
+        let highScore = parseInt(localStorage.getItem('cyber_highscore')) || 0;
+        highscoreValEl.innerText = `BEST: ${highScore.toString().padStart(3, '0')}`;
+        
+        let gameState = 'MODE_SELECT'; 
+        let lastGameState = 'MODE_SELECT';
+        let gameSpeed = gameConfig.initialSpeed;
+        let time = 0; 
+        
+        // 游戏循环控制变量
+        let fpsInterval, now, then, elapsed;
+
+        let shieldActive = false;
+        let feverEnergy = 0;
+        let isFeverMode = false;
+        let feverTimer = 0;
+        const MAX_FEVER_ENERGY = 100;
+        const FEVER_DURATION = 300; 
+
+        function changeColorScheme() {
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * COLOR_SCHEMES.length);
+            } while (newIndex === schemeIndex && COLOR_SCHEMES.length > 1);
+            
+            schemeIndex = newIndex;
+            currentScheme = COLOR_SCHEMES[schemeIndex];
+            
+            bgLayers[0].color = currentScheme.building1;
+            bgLayers[1].color = currentScheme.building2;
+            bgLayers[2].color = currentScheme.building3;
+            
+            scoreColorChangeThreshold = score + COLOR_CHANGE_STEP;
+            
+            // 优化：低画质下不产生全屏粒子
+            if (gameConfig.quality === 'HIGH') {
+                for(let i=0; i<30; i++) {
+                    const color = getRandomNeonColor();
+                    particles.push(new Particle(width/2, height/2, color, 8));
+                }
+            }
+        }
+
+        // =========================================
+        // 功能说明：UI 绑定与配置管理
+        // =========================================
+
         function startWithMode(mode) {
             currentMode = mode;
             if (mode === 'MOBILE') {
@@ -823,40 +1143,65 @@
             } else {
                 gameConfig = { ...pcConfig };
             }
-            bindConfigUI();
+            
+            try {
+                bindConfigUI();
+            } catch (e) {
+                console.error("Config binding failed:", e);
+            }
+            
+            // 初始化时间控制变量
+            fpsInterval = 1000 / gameConfig.targetFPS;
+            then = window.performance.now();
+
             gameState = 'START';
             modeSelectPanel.style.display = 'none';
             startPromptPanel.style.display = 'block';
             player.reset();
+            
+            changeColorScheme(); 
+            scoreColorChangeThreshold = 30; 
         }
 
-        // --- 绑定配置 UI ---
         function bindConfigUI() {
             const bindRange = (id, key) => {
                 const el = document.getElementById(id);
+                if (!el) return; 
+                
                 const valEl = document.getElementById('val-' + id.split('-')[1]);
                 el.value = gameConfig[key];
-                valEl.innerText = gameConfig[key];
+                if (valEl) valEl.innerText = gameConfig[key];
                 
                 el.oninput = (e) => {
                     const val = parseFloat(e.target.value);
                     gameConfig[key] = val;
-                    valEl.innerText = val;
+                    if (valEl) valEl.innerText = val;
                     if (key === 'playerX') player.x = val;
-                    if (key === 'gravity') player.gravity = val;
+                    if (key === 'gravity') player.gravity = val; 
                     if (key === 'jumpForce') player.jump = val;
                 };
             };
             
             const bindCheck = (id, key) => {
                 const el = document.getElementById(id);
-                el.checked = gameConfig[key];
+                if (!el) return; 
+                
+                // 特殊处理 quality 字符串转布尔显示
+                if (key === 'quality') {
+                    el.checked = gameConfig[key] === 'HIGH';
+                } else {
+                    el.checked = gameConfig[key];
+                }
+                
                 el.onchange = (e) => {
-                    gameConfig[key] = e.target.checked;
-                    // BGM 实时开关
                     if (key === 'bgmEnabled') {
+                        gameConfig[key] = e.target.checked;
                         if (e.target.checked) synthWaveGen.start();
                         else synthWaveGen.stop();
+                    } else if (key === 'quality') {
+                        gameConfig[key] = e.target.checked ? 'HIGH' : 'LOW';
+                    } else {
+                        gameConfig[key] = e.target.checked;
                     }
                 };
             };
@@ -864,14 +1209,14 @@
             const bindRealtimeSpeed = () => {
                  const el = document.getElementById('cfg-gameSpeed');
                  const valEl = document.getElementById('val-gameSpeed');
+                 if (!el) return; 
                  
                  el.value = gameSpeed;
-                 valEl.innerText = gameSpeed.toFixed(1);
-
+                 if (valEl) valEl.innerText = gameSpeed.toFixed(1);
                  el.oninput = (e) => {
                      const val = parseFloat(e.target.value);
                      gameSpeed = val; 
-                     valEl.innerText = val.toFixed(1);
+                     if (valEl) valEl.innerText = val.toFixed(1);
                  };
             };
 
@@ -884,6 +1229,8 @@
             bindRange('cfg-dist', 'obstacleDistance');
             bindCheck('cfg-godMode', 'godMode');
             bindCheck('cfg-bgm', 'bgmEnabled');
+            bindCheck('cfg-autoFire', 'autoFire');
+            bindCheck('cfg-quality', 'quality'); // 绑定画质开关
             bindRealtimeSpeed();
         }
         
@@ -894,15 +1241,19 @@
             } else {
                 gameConfig = { ...pcConfig };
             }
-            // 保持BGM状态
             gameConfig.bgmEnabled = wasBgmEnabled;
             
+            // 重置时间间隔
+            fpsInterval = 1000 / gameConfig.targetFPS;
+
             bindConfigUI();
             player.x = gameConfig.playerX;
+            player.gravity = gameConfig.gravity;
+            player.jump = gameConfig.jumpForce;
+
             sound.score(); 
         }
 
-        // --- 切换暂停状态 ---
         function togglePause() {
             if (gameState === 'PAUSED') {
                 gameState = lastGameState;
@@ -914,9 +1265,11 @@
                     gameOverScreen.style.display = 'flex';
                 } else if (gameState === 'PLAYING') {
                     scoreContainer.style.display = 'block';
+                    energyBarContainer.style.display = 'block'; 
                 }
-                // 恢复音乐音量
                 if (gameConfig.bgmEnabled) synthWaveGen.setVolume(0.15);
+                // 恢复时重置时间戳，防止跳帧
+                then = window.performance.now();
             } else {
                 lastGameState = gameState;
                 gameState = 'PAUSED';
@@ -931,23 +1284,24 @@
                 startScreen.style.display = 'none';
                 gameOverScreen.style.display = 'none';
                 scoreContainer.style.display = 'none'; 
-                // 暂停音乐（或降低音量）
+                energyBarContainer.style.display = 'none';
                 if (gameConfig.bgmEnabled) synthWaveGen.setVolume(0.05);
             }
         }
 
-        // --- 音频系统 (BGM & SFX) ---
+        // =========================================
+        // 功能说明：音频系统 (合成器与音效)
+        // =========================================
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const audioCtx = new AudioContext();
         
-        // Synthwave 贝斯生成器
         const synthWaveGen = {
             osc: null,
             gain: null,
             filter: null,
             interval: null,
             noteIndex: 0,
-            notes: [55, 55, 55, 55, 65.41, 65.41, 49, 49], // A1, F2, G1 simple progression
+            notes: [55, 55, 55, 55, 65.41, 65.41, 49, 49],
             isPlaying: false,
 
             start: function() {
@@ -971,20 +1325,19 @@
                 this.osc.start();
                 this.isPlaying = true;
 
-                // Sequencer
-                const beatTime = 250; // ms
+                const beatTime = 250; 
                 this.interval = setInterval(() => {
                     if (gameState === 'PAUSED') return;
                     
                     const freq = this.notes[this.noteIndex % this.notes.length];
-                    this.osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    const multiplier = isFeverMode ? 1.5 : 1.0;
+                    this.osc.frequency.setValueAtTime(freq * multiplier, audioCtx.currentTime);
                     
-                    // Simple envelope
-                    this.filter.frequency.setValueAtTime(800, audioCtx.currentTime);
+                    this.filter.frequency.setValueAtTime(800 * multiplier, audioCtx.currentTime);
                     this.filter.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.2);
                     
                     this.noteIndex++;
-                }, beatTime);
+                }, isFeverMode ? 150 : beatTime); 
             },
 
             stop: function() {
@@ -1013,23 +1366,20 @@
                 osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
                 gain.gain.setValueAtTime(vol, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-                
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
                 osc.stop(audioCtx.currentTime + duration);
             },
             jump: () => {
-                // 随机音高变化增加机械感
                 const detune = Math.random() * 50;
-                sound.playTone(120 + detune, 'sawtooth', 0.15, 0.1);
+                sound.playTone(120 + detune, 'sawtooth', 0.15, 0.15); 
             },
             score: () => {
                 sound.playTone(880, 'sine', 0.1, 0.1);
                 setTimeout(() => sound.playTone(1760, 'sine', 0.2, 0.1), 50);
             },
             powerUp: () => {
-                // 上升音效
                 if (audioCtx.state === 'suspended') audioCtx.resume();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -1042,6 +1392,11 @@
                 gain.connect(audioCtx.destination);
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.3);
+            },
+            feverStart: () => {
+                sound.playTone(440, 'square', 0.5, 0.2);
+                setTimeout(() => sound.playTone(880, 'square', 0.5, 0.2), 100);
+                setTimeout(() => sound.playTone(1760, 'square', 1.0, 0.2), 200);
             },
             crash: () => {
                 if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -1062,11 +1417,12 @@
             }
         };
 
-        // --- 游戏对象 ---
-
+        // =========================================
+        // 功能说明：粒子系统与视觉特效
+        // =========================================
         const particles = [];
         class Particle {
-            constructor(x, y, color, speed, size) {
+            constructor(x, y, color, speed, size, vxOverride, vyOverride, decaySpeed) {
                 this.x = x;
                 this.y = y;
                 this.color = color;
@@ -1075,55 +1431,73 @@
                 const angle = Math.random() * Math.PI * 2;
                 const velocity = Math.random() * speed; 
                 
-                this.vx = Math.cos(angle) * velocity;
-                this.vy = Math.sin(angle) * velocity;
+                this.vx = vxOverride !== undefined ? vxOverride : Math.cos(angle) * velocity;
+                this.vy = vyOverride !== undefined ? vyOverride : Math.sin(angle) * velocity;
                 
                 this.life = 1.0;
-                this.decay = Math.random() * 0.02 + 0.015; 
+                this.decay = decaySpeed !== undefined ? decaySpeed : (Math.random() * 0.02 + 0.015); 
             }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.life -= this.decay;
-                this.vy += 0.1; 
+            update(dt) {
+                this.x += this.vx * dt;
+                this.y += this.vy * dt;
+                this.life -= this.decay * dt;
+                this.vy += 0.1 * dt; 
             }
             draw() {
                 ctx.globalAlpha = this.life;
                 ctx.fillStyle = this.color;
-                ctx.shadowBlur = 5;
-                ctx.shadowColor = this.color;
+                
+                // 优化：低画质下不渲染粒子光晕
+                if (gameConfig.quality === 'HIGH') {
+                    ctx.shadowBlur = 5;
+                    ctx.shadowColor = this.color;
+                }
+                
                 ctx.fillRect(this.x, this.y, this.size, this.size);
                 ctx.shadowBlur = 0; 
                 ctx.globalAlpha = 1.0;
             }
         }
         
-        // 道具类
-        const powerUps = [];
+        // =========================================
+        // 功能说明：道具系统 (奖励与护盾)
+        // =========================================
+        const powerUps = []; 
         class PowerUp {
             constructor(x, y, type) {
                 this.x = x;
                 this.y = y;
-                this.type = type; // 'SHIELD', 'SLOW', 'BONUS'
-                this.size = 20;
+                this.type = type; // 'SHIELD', 'BONUS'
                 this.markedForDeletion = false;
                 this.oscillation = Math.random() * Math.PI * 2;
                 
-                switch(type) {
-                    case 'SHIELD': this.color = '#00ffff'; this.symbol = 'S'; break;
-                    case 'SLOW': this.color = '#ff00ff'; this.symbol = 'T'; break;
-                    case 'BONUS': this.color = '#ffff00'; this.symbol = '+'; break;
+                this.size = 20;
+                this.color = '#fff';
+
+                if (this.type === 'BONUS') {
+                     this.bonusValue = Math.floor(Math.random() * 5) + 1;
+                     this.size = 28 - (this.bonusValue * 4);
+                     this.color = '#FFD700'; // 金色
+                } else if (this.type === 'SHIELD') {
+                     this.size = 22; 
+                     this.color = '#00FFFF'; // 青色
                 }
             }
             
-            update() {
-                this.x -= gameSpeed; // 随场景移动
-                this.oscillation += 0.1;
-                this.y += Math.sin(this.oscillation) * 0.5; // 上下悬浮
+            update(dt) {
+                this.x -= gameSpeed * dt; 
+                this.oscillation += 0.1 * dt;
+                this.y += Math.sin(this.oscillation) * 0.5 * dt; 
                 
+                if (isFeverMode && this.type === 'BONUS') {
+                    const dx = player.x - this.x;
+                    const dy = player.y - this.y;
+                    this.x += dx * 0.15 * dt; 
+                    this.y += dy * 0.15 * dt;
+                }
+
                 if (this.x + this.size < 0) this.markedForDeletion = true;
                 
-                // 碰撞检测
                 const dx = player.x - this.x;
                 const dy = player.y - this.y;
                 const dist = Math.sqrt(dx*dx + dy*dy);
@@ -1136,44 +1510,41 @@
             
             activate() {
                 sound.powerUp();
-                showFloatingText(this.type, this.x, this.y, this.color);
                 
                 if (this.type === 'SHIELD') {
                     shieldActive = true;
-                } else if (this.type === 'SLOW') {
-                    if (!slowMotionActive) {
-                        slowMotionActive = true;
-                        gameSpeed *= 0.5; // 减速
-                        slowMotionTimer = 300; // 持续 5 秒 (60fps * 5)
-                    } else {
-                        slowMotionTimer = 300; // 刷新时间
-                    }
+                    showFloatingText("SHIELD UP", this.x, this.y, this.color);
+                    addEnergy(20); 
                 } else if (this.type === 'BONUS') {
-                    score += 5;
+                    score += this.bonusValue;
                     scoreValEl.innerText = score.toString().padStart(3, '0');
+                    scoreContainer.classList.add('score-active');
+                    setTimeout(() => scoreContainer.classList.remove('score-active'), 100);
+                    showFloatingText(`+${this.bonusValue}`, this.x, this.y, this.color);
+                    addEnergy(this.bonusValue * 3); 
                 }
             }
             
             draw() {
                 ctx.save();
                 ctx.translate(this.x, this.y);
-                ctx.rotate(this.oscillation); // 旋转效果
+                ctx.rotate(this.oscillation); 
                 
-                // 外框
-                ctx.strokeStyle = this.color;
-                ctx.lineWidth = 2;
-                ctx.strokeRect(-10, -10, 20, 20);
+                ctx.fillStyle = this.color;
                 
-                // 发光
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = this.color;
+                // 优化：仅在高画质下启用光晕
+                if (gameConfig.quality === 'HIGH') {
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = this.color;
+                }
                 
-                // 符号
-                ctx.fillStyle = '#fff';
-                ctx.font = '12px Orbitron';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(this.symbol, 0, 0);
+                if (this.type === 'BONUS') {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (this.type === 'SHIELD') {
+                    ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+                }
                 
                 ctx.restore();
             }
@@ -1191,13 +1562,20 @@
             setTimeout(() => div.remove(), 1000);
         }
 
+        // =========================================
+        // 功能说明：背景图层与建筑生成
+        // =========================================
         const bgLayers = [
-            { speed: 0.5, buildings: [], color: '#0a0a20', yOffset: 100 },
-            { speed: 1.5, buildings: [], color: '#151530', yOffset: 50 },
-            { speed: 3.0, buildings: [], color: '#202040', yOffset: 0 } 
+            { speed: 0.5, buildings: [], color: '', yOffset: 100 },
+            { speed: 1.5, buildings: [], color: '', yOffset: 50 },
+            { speed: 3.0, buildings: [], color: '', yOffset: 0 } 
         ];
 
         function initBackground() {
+            bgLayers[0].color = currentScheme.building1;
+            bgLayers[1].color = currentScheme.building2;
+            bgLayers[2].color = currentScheme.building3;
+            
             bgLayers.forEach(layer => {
                 layer.buildings = [];
                 let currentX = 0;
@@ -1210,10 +1588,11 @@
             });
         }
 
-        function updateBackground() {
+        function updateBackground(dt) {
             bgLayers.forEach(layer => {
                 layer.buildings.forEach(b => {
-                    b.x -= layer.speed * (gameState === 'PLAYING' ? 1 : 0.2); 
+                    const feverMult = isFeverMode ? 3.0 : 1.0; 
+                    b.x -= layer.speed * (gameState === 'PLAYING' ? 1 : 0.2) * feverMult * dt; 
                 });
 
                 if (layer.buildings[0].x + layer.buildings[0].w < 0) {
@@ -1228,18 +1607,29 @@
 
         function drawBackground() {
             const gradient = ctx.createLinearGradient(0, 0, 0, height);
-            gradient.addColorStop(0, '#020205');
-            gradient.addColorStop(1, '#1a0b2e');
+            
+            if (isFeverMode) {
+                const hue = (time * 500) % 360; 
+                gradient.addColorStop(0, `hsl(${hue}, 100%, 20%)`);
+                gradient.addColorStop(1, `hsl(${(hue + 180) % 360}, 100%, 50%)`);
+                ctx.strokeStyle = `hsl(${(hue + 90) % 360}, 100%, 70%)`; 
+            } else {
+                gradient.addColorStop(0, currentScheme.bg_dark);
+                gradient.addColorStop(1, currentScheme.bg_light);
+                ctx.strokeStyle = currentScheme.grid_color;
+            }
+            
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, width, height);
 
             ctx.save();
-            ctx.strokeStyle = 'rgba(255, 0, 255, 0.3)';
             ctx.lineWidth = 1;
             ctx.beginPath();
             const horizon = height * 0.8;
+            
             for (let i = 0; i < width; i += 40) {
-                let x = (i - time * 20) % width;
+                const speedMult = isFeverMode ? 3 : 1;
+                let x = (i - time * 20 * speedMult) % width;
                 if(x < 0) x += width;
                 ctx.moveTo(x, height);
                 ctx.lineTo((x - width/2) * 0.2 + width/2, horizon); 
@@ -1253,7 +1643,13 @@
             ctx.restore();
 
             bgLayers.forEach((layer, index) => {
-                ctx.fillStyle = layer.color;
+                if (isFeverMode) {
+                    const hue = (time * 300 + index * 100) % 360; 
+                    ctx.fillStyle = `hsla(${hue}, 80%, 40%, 0.8)`;
+                } else {
+                    ctx.fillStyle = layer.color;
+                }
+                
                 layer.buildings.forEach(b => {
                     const renderY = height - b.h + layer.yOffset;
                     ctx.fillRect(b.x, renderY, b.w, b.h);
@@ -1263,15 +1659,24 @@
                         const seed = (b.x * b.w) % 100;
                         if (seed > 50) {
                             ctx.fillStyle = seed > 80 ? '#f0f' : '#0ff';
+                            if (isFeverMode) ctx.fillStyle = '#fff'; 
                             ctx.fillRect(b.x + 5, renderY + 10, 4, 4);
                         }
                         ctx.globalAlpha = 1.0;
-                        ctx.fillStyle = layer.color; 
+                        if (isFeverMode) {
+                            const hue = (time * 300 + index * 100) % 360; 
+                            ctx.fillStyle = `hsla(${hue}, 80%, 40%, 0.8)`;
+                        } else {
+                            ctx.fillStyle = layer.color;
+                        }
                     }
                 });
             });
         }
 
+        // =========================================
+        // 功能说明：玩家实体 (Drone) 逻辑
+        // =========================================
         const player = {
             x: gameConfig.playerX,
             y: 150,
@@ -1283,15 +1688,16 @@
             rotation: 0,
             trail: [],
             currentTrailColor: '#00ffff', 
+            shieldBreakingTimer: 0, 
             
-            update: function() {
-                this.velocity += gameConfig.gravity; 
+            update: function(dt) {
+                this.velocity += this.gravity * dt; 
                 
                 if (this.velocity > this.maxFallSpeed) {
                     this.velocity = this.maxFallSpeed;
                 }
 
-                this.y += this.velocity;
+                this.y += this.velocity * dt;
 
                 if (this.y + this.radius >= height) {
                     this.y = height - this.radius;
@@ -1306,18 +1712,20 @@
                 if (this.velocity < 0) targetRotation = -0.3;
                 else targetRotation = 0.3;
                 
-                this.rotation += (targetRotation - this.rotation) * 0.1;
+                this.rotation += (targetRotation - this.rotation) * 0.1 * dt;
 
-                if (frames % 3 === 0) {
+                if (this.shieldBreakingTimer > 0) this.shieldBreakingTimer -= dt;
+
+                if (frames % 3 === 0 || isFeverMode) { 
                     this.trail.push({
                         x: this.x, 
                         y: this.y, 
                         alpha: 1,
                         color: this.currentTrailColor 
                     });
-                    if (this.trail.length > 15) this.trail.shift(); 
+                    if (this.trail.length > 25) this.trail.shift(); 
                 }
-                this.trail.forEach(t => t.alpha -= 0.08);
+                this.trail.forEach(t => t.alpha -= 0.05 * dt);
             },
 
             draw: function() {
@@ -1332,10 +1740,15 @@
                         ctx.beginPath();
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = p1.color;
+                        ctx.strokeStyle = isFeverMode ? '#ffff00' : p1.color; 
                         ctx.globalAlpha = p1.alpha;
-                        ctx.shadowBlur = 10;
-                        ctx.shadowColor = p1.color;
+                        
+                        // 优化：高画质下才启用模糊
+                        if (gameConfig.quality === 'HIGH') {
+                            ctx.shadowBlur = isFeverMode ? 20 : 10;
+                            ctx.shadowColor = ctx.strokeStyle;
+                        }
+                        
                         ctx.stroke();
                     }
                 }
@@ -1345,26 +1758,37 @@
                 ctx.translate(this.x, this.y);
                 ctx.rotate(this.rotation);
                 
-                // 护盾视觉
                 if (shieldActive) {
                     ctx.beginPath();
                     ctx.arc(0, 0, this.radius + 8, 0, Math.PI * 2);
-                    ctx.strokeStyle = `rgba(0, 255, 255, ${0.5 + Math.sin(time*15)*0.5})`;
-                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = `rgba(0, 255, 255, ${0.3 + Math.sin(time*10)*0.2})`; 
+                    ctx.lineWidth = 1; 
                     ctx.stroke();
                 }
                 
-                // 无敌模式视觉 (God Mode)
-                if (gameConfig.godMode) {
+                if (gameConfig.godMode || isFeverMode) {
                     ctx.beginPath();
                     ctx.arc(0, 0, this.radius + 12, 0, Math.PI * 2);
-                    ctx.strokeStyle = `rgba(255, 215, 0, ${0.3 + Math.sin(time*5)*0.2})`;
-                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = isFeverMode ? '#ffff00' : this.currentTrailColor; 
+                    ctx.lineWidth = 4; 
                     ctx.stroke();
                 }
 
-                ctx.shadowBlur = 20;
-                ctx.shadowColor = this.currentTrailColor; 
+                if (this.shieldBreakingTimer > 0) {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.radius + 14, 0, Math.PI * 2);
+                    const alpha = Math.abs(Math.sin(time * 30)); 
+                    ctx.strokeStyle = `rgba(0, 255, 255, ${alpha})`;
+                    ctx.lineWidth = 5; 
+                    ctx.stroke();
+                }
+
+                // 优化：仅在高画质下启用玩家发光
+                if (gameConfig.quality === 'HIGH') {
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = this.currentTrailColor; 
+                }
+                
                 ctx.fillStyle = '#fff';
                 ctx.beginPath();
                 ctx.moveTo(10, 0);
@@ -1375,7 +1799,7 @@
                 ctx.fill();
 
                 ctx.fillStyle = this.currentTrailColor; 
-                ctx.shadowColor = this.currentTrailColor;
+                if (gameConfig.quality === 'HIGH') ctx.shadowColor = this.currentTrailColor;
                 ctx.beginPath();
                 const flickr = Math.random() * 5;
                 ctx.moveTo(-10, 0);
@@ -1393,6 +1817,9 @@
                 this.rotation = 0;
                 this.trail = [];
                 this.currentTrailColor = '#00ffff';
+                this.gravity = gameConfig.gravity; 
+                this.jump = gameConfig.jumpForce; 
+                this.shieldBreakingTimer = 0;
             },
             
             changeColor: function() {
@@ -1404,6 +1831,9 @@
             }
         };
 
+        // =========================================
+        // 功能说明：障碍物生成与管理
+        // =========================================
         const obstacles = [];
         const pipeWidth = 60;
         
@@ -1429,20 +1859,19 @@
                 this.markedForDeletion = false;
                 this.color = getRandomNeonColor();
                 
-                // 动态障碍物参数
-                this.moving = score > 10; // 10分后开始移动
+                this.moving = score > 10; 
                 this.moveSpeed = (Math.random() * 1 + 0.5) * (Math.random() > 0.5 ? 1 : -1);
                 this.initialTop = this.topHeight;
             }
 
-            update() {
-                this.x -= gameSpeed;
+            update(dt) {
+                const feverMult = isFeverMode ? 3.0 : 1.0;
+                this.x -= gameSpeed * feverMult * dt;
+                
                 if (this.x + pipeWidth < 0) this.markedForDeletion = true;
                 
-                // 上下移动逻辑
                 if (this.moving) {
-                    this.topHeight += this.moveSpeed;
-                    // 边界反弹
+                    this.topHeight += this.moveSpeed * feverMult * dt;
                     if (Math.abs(this.topHeight - this.initialTop) > 60 || 
                         this.topHeight < 20 || 
                         this.bottomY > height - 20) {
@@ -1451,7 +1880,7 @@
                     this.bottomY = this.topHeight + gameConfig.pipeGap;
                 }
 
-                if (!gameConfig.godMode) {
+                if (!gameConfig.godMode && !isFeverMode && player.shieldBreakingTimer <= 0) {
                     const padding = 6; 
                     
                     if (
@@ -1477,28 +1906,45 @@
                     scoreContainer.classList.add('score-active');
                     setTimeout(() => scoreContainer.classList.remove('score-active'), 100);
                     sound.score();
+                    
+                    addEnergy(1);
+                    rainSystem.decrementCounter();
+
                     this.passed = true;
-                    if (score % 5 === 0 && gameSpeed < 10 && !slowMotionActive) gameSpeed += gameConfig.speedIncrement;
+                    
+                    if (score % 5 === 0 && gameSpeed < 10) {
+                        gameSpeed += gameConfig.speedIncrement;
+                    }
                 }
             }
 
             draw() {
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = this.color;
-                ctx.strokeStyle = this.color;
+                // 优化：仅在高画质下启用光晕
+                if (gameConfig.quality === 'HIGH') {
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = isFeverMode ? '#00ff00' : this.color; 
+                } else {
+                    ctx.shadowBlur = 0;
+                }
+                
+                ctx.strokeStyle = isFeverMode ? '#00ff00' : this.color;
                 ctx.lineWidth = 2;
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                
                 ctx.fillRect(this.x, 0, pipeWidth, this.topHeight);
                 ctx.strokeRect(this.x, 0, pipeWidth, this.topHeight);
                 ctx.fillRect(this.x, this.bottomY, pipeWidth, height - this.bottomY);
                 ctx.strokeRect(this.x, this.bottomY, pipeWidth, height - this.bottomY);
+                
+                // 细节线条
                 ctx.beginPath();
                 ctx.moveTo(this.x + 10, 0);
                 ctx.lineTo(this.x + 10, this.topHeight - 20);
                 ctx.moveTo(this.x + pipeWidth - 10, this.bottomY + 20);
                 ctx.lineTo(this.x + pipeWidth - 10, height);
                 ctx.stroke();
-                ctx.fillStyle = this.color;
+                
+                ctx.fillStyle = isFeverMode ? '#00ff00' : this.color;
                 ctx.fillRect(this.x, this.topHeight - 10, pipeWidth, 10);
                 ctx.fillRect(this.x, this.bottomY, pipeWidth, 10);
                 ctx.shadowBlur = 0; 
@@ -1507,41 +1953,105 @@
         
         function handleCollision() {
             if (shieldActive) {
-                shieldActive = false; // 消耗护盾
-                sound.powerUp(); // 借用音效表示消耗
-                // 简单的视觉反馈
+                shieldActive = false;
+                player.shieldBreakingTimer = 60; 
+                sound.powerUp(); 
                 showFloatingText("SHIELD BREAK", player.x, player.y - 30, "#0ff");
-                // 短暂无敌或推开效果(这里简化为仅抵挡一次)
-                // 让障碍物变透明表示已碰撞过? 不，为了防止连续判定，可以给个临时无敌帧，但这里最简单的是不做处理，
-                // 因为update每帧都跑，需要防止单帧多次触发。
-                // 更好的做法：把障碍物标记为“已碰撞”或者给玩家无敌时间。
-                // 这里我们给玩家一个短暂无敌时间
-                gameConfig.godMode = true;
-                setTimeout(() => { gameConfig.godMode = false; }, 1000);
             } else {
                 setGameOver();
             }
         }
+        
+        // =========================================
+        // 功能说明：能量系统 (Fever 模式)
+        // =========================================
+        function addEnergy(amount) {
+            if (isFeverMode) return; 
+            feverEnergy += amount;
+            if (feverEnergy >= MAX_FEVER_ENERGY) {
+                feverEnergy = MAX_FEVER_ENERGY;
+                startFeverMode();
+            }
+            updateEnergyBar();
+        }
+        
+        function updateEnergyBar() {
+            const pct = Math.min(100, Math.floor((feverEnergy / MAX_FEVER_ENERGY) * 100));
+            energyFill.style.width = `${pct}%`;
+            const textEl = document.querySelector('.energy-text');
+            
+            if (isFeverMode) {
+                energyFill.style.background = '#ffff00';
+                energyFill.style.boxShadow = '0 0 15px #ffff00';
+                textEl.innerText = "FEVER!!";
+            } else {
+                energyFill.style.background = 'linear-gradient(90deg, #f0f, #0ff)';
+                energyFill.style.boxShadow = '0 0 8px #f0f';
+                textEl.innerText = `ENERGY ${pct}%`;
+            }
+        }
+        
+        function startFeverMode() {
+            isFeverMode = true;
+            feverTimer = FEVER_DURATION;
+            feverOverlay.style.display = 'block';
+            sound.feverStart();
+            
+            if (gameConfig.bgmEnabled) {
+                synthWaveGen.stop();
+                synthWaveGen.start(); 
+            }
+        }
+        
+        function endFeverMode() {
+            isFeverMode = false;
+            feverEnergy = 0;
+            player.shieldBreakingTimer = 120; 
+            updateEnergyBar();
+            feverOverlay.style.display = 'none';
+            
+            if (gameConfig.bgmEnabled) {
+                synthWaveGen.stop();
+                synthWaveGen.start();
+            }
+        }
 
-        // --- 核心控制 ---
-
+        // =========================================
+        // 功能说明：游戏核心流程控制
+        // =========================================
+        
         function resize() {
+            // 优化：限制最大 DPR 以提高移动端性能
+            // PC: 保持默认，Mobile: 限制为 1.5 或 2.0 (如果很高)
+            const dpr = window.devicePixelRatio || 1;
+            const maxDpr = currentMode === 'MOBILE' ? Math.min(dpr, 2) : dpr;
+            
+            // 使用 CSS 像素大小
             width = window.innerWidth;
             height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-            // 保持背景重绘
+            
+            // 设置 Canvas 实际渲染像素
+            canvas.width = width * maxDpr;
+            canvas.height = height * maxDpr;
+            
+            // 缩放 Canvas 上下文以匹配 CSS 像素
+            ctx.scale(maxDpr, maxDpr);
+            
+            // 强制重设样式大小
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            
             if(gameState === 'MODE_SELECT' || gameState === 'START') initBackground();
         }
 
-        // 返回标题画面
         function returnToTitle() {
             gameState = 'START';
             
             gameOverScreen.style.display = 'none';
             startScreen.style.display = 'block';
+            energyBarContainer.style.display = 'none';
+            feverOverlay.style.display = 'none';
             
-            // 切换面板显示
             modeSelectPanel.style.display = 'none';
             startPromptPanel.style.display = 'block';
             
@@ -1553,65 +2063,86 @@
             obstacles.length = 0;
             particles.length = 0;
             powerUps.length = 0;
+            hovercars.length = 0; 
             score = 0;
             gameSpeed = gameConfig.initialSpeed;
             
             shieldActive = false;
-            slowMotionActive = false;
+            isFeverMode = false;
+            feverEnergy = 0;
+            
+            rainSystem.stop();
+            rainSystem.drops = [];
+
+            changeColorScheme();
+            scoreColorChangeThreshold = 30;
         }
 
-        // 重置并开始游戏
         function resetGame() {
             player.reset();
             obstacles.length = 0;
             particles.length = 0;
             powerUps.length = 0;
+            hovercars.length = 0; 
             score = 0;
             scoreValEl.innerText = '000'; 
-            gameSpeed = gameConfig.initialSpeed; 
+            
+            gameSpeed = gameConfig.initialSpeed;
+            player.gravity = gameConfig.gravity;
+            player.jump = gameConfig.jumpForce;
+            
             frames = 0;
             
             shieldActive = false;
-            slowMotionActive = false;
+            isFeverMode = false;
+            feverEnergy = 0;
+            updateEnergyBar();
+            
+            rainSystem.stop();
+            rainSystem.drops = [];
             
             gameState = 'PLAYING';
             
+            // 确保UI可见
             startScreen.style.display = 'none';
             gameOverScreen.style.display = 'none';
             pauseScreen.style.display = 'none';
             pauseOverlay.style.display = 'none';
             scoreContainer.style.display = 'block';
+            energyBarContainer.style.display = 'block'; 
             newRecordMsg.style.display = 'none';
+            feverOverlay.style.display = 'none';
             
-            player.velocity = -gameConfig.jumpForce; 
-            sound.jump();
+            triggerJump();
             
             if (gameConfig.bgmEnabled) synthWaveGen.start();
+            
+            scoreColorChangeThreshold = COLOR_CHANGE_STEP; 
         }
 
-        // 生成死亡粒子效果
         function setGameOver() {
             if (gameState === 'GAMEOVER') return;
-            if (gameConfig.godMode && !shieldActive) return; // 护盾逻辑特殊处理
+            if (gameConfig.godMode || isFeverMode || player.shieldBreakingTimer > 0) return;
 
             gameState = 'GAMEOVER';
             sound.crash();
             synthWaveGen.stop();
             
-            for(let i=0; i<100; i++) { 
+            // 优化：低画质减少死亡粒子
+            const pCount = gameConfig.quality === 'HIGH' ? 100 : 30;
+            
+            for(let i=0; i<pCount; i++) { 
                 const color = getRandomNeonColor();
                 const speed = Math.random() * 12 + 8; 
                 const size = Math.random() * 5 + 2;
                 particles.push(new Particle(player.x, player.y, color, speed, size));
             }
             
-            // 检查最高分
             if (score > highScore) {
                 highScore = score;
                 localStorage.setItem('cyber_highscore', highScore);
                 highscoreValEl.innerText = `BEST: ${highScore.toString().padStart(3, '0')}`;
                 
-                // 显示新纪录特效
                 setTimeout(() => {
                     const flash = document.createElement('div');
                     flash.className = 'new-record-flash';
@@ -1624,31 +2155,17 @@
             setTimeout(() => {
                 finalScoreEl.innerText = `最终得分: ${score.toString().padStart(3, '0')}`;
                 gameOverScreen.style.display = 'flex'; 
+                energyBarContainer.style.display = 'none';
+                feverOverlay.style.display = 'none';
             }, 500);
         }
-        
-        // 战绩分享
-        function shareScore() {
-            const text = `▀▄▀▄ CYBER DIVE ▄▀▄▀\n飞行员: [ANONYMOUS]\n同步率: ${score}\n状态: 任务终止\n-----------------------\n挑战高分: ${highScore}`;
-            
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            
-            try {
-                document.execCommand('copy');
-                alert('战报已生成至剪贴板 // LOG COPIED');
-            } catch (err) {
-                alert('复制失败 // COPY FAILED');
-            }
-            
-            document.body.removeChild(textarea);
-        }
 
-        // UI点击事件处理
-        function handleInput(e) {
-            // 阻止 UI 元素点击事件被拦截
+        // =========================================
+        // 功能说明：事件监听与输入分发
+        // =========================================
+
+        function handleInputDown(e) {
+            // 忽略非游戏区域的点击 (UI按钮等)
             if (e.target.closest('#settings-btn') || 
                 e.target.closest('button') || 
                 e.target.closest('input') ||
@@ -1658,32 +2175,72 @@
                 return;
             }
 
-            if (e.type === 'keydown' && e.code === 'Escape') {
-                togglePause();
-                return;
+            if (e.type === 'touchstart' || e.type === 'mousedown') {
+                 e.preventDefault(); 
             }
+            
             if (gameState === 'PAUSED' || gameState === 'MODE_SELECT') return;
 
-            if (e.type === 'keydown' && e.code !== 'Space') return;
-            if (e.type === 'touchstart') e.preventDefault(); 
-
-            // START 状态下点击开始游戏
-            if (gameState === 'START') {
-                resetGame();
-                return;
+            // 键盘事件处理 (空格键)
+            if (e.type === 'keydown' && e.code === 'Space') {
+                 if (!e.repeat) { 
+                    if (gameState === 'START') {
+                        resetGame();
+                    } else if (gameState === 'PLAYING') {
+                        triggerJump();
+                    }
+                 }
+                 return;
             }
+            
+            // 触摸/鼠标事件处理
+            if (e.type === 'mousedown' || e.type === 'touchstart') {
+                if (!isInputHeld) {
+                    isInputHeld = true;
 
-            if (gameState === 'PLAYING') {
-                player.velocity = -gameConfig.jumpForce; 
-                player.changeColor(); 
-                sound.jump();
-                
-                for(let i=0; i<5; i++) {
-                    particles.push(new Particle(player.x - 10, player.y, player.currentTrailColor, 2));
+                    if (gameState === 'START') {
+                        resetGame();
+                        return;
+                    }
+
+                    if (gameState === 'PLAYING') {
+                        triggerJump(); 
+                        
+                        if (gameConfig.autoFire) {
+                            if (inputHoldInterval) clearInterval(inputHoldInterval);
+                            inputHoldInterval = setInterval(() => {
+                                if (isInputHeld && gameState === 'PLAYING') {
+                                    triggerJump();
+                                }
+                            }, INPUT_REPEAT_RATE);
+                        }
+                    }
                 }
             }
         }
         
+        function handleInputUp(e) {
+            if (e.type === 'keyup' && e.code === 'Space') return; 
+            
+            if (e.type === 'mouseup' || e.type === 'touchend') {
+                isInputHeld = false;
+                if (inputHoldInterval) {
+                    clearInterval(inputHoldInterval);
+                    inputHoldInterval = null;
+                }
+            }
+        }
+        
+        function handleSpecialKeys(e) {
+            if (e.code === 'Escape') {
+                togglePause();
+            }
+        }
+
+        // =========================================
+        // 功能说明：游戏主循环 (Delta Time 优化)
+        // =========================================
+
         restartBtn.addEventListener('mousemove', (e) => {
              if (Math.random() > 0.5) return;
              const x = e.clientX;
@@ -1694,78 +2251,89 @@
              }
         });
 
-        // --- 游戏循环 ---
-
-        function update() {
+        // 标准化 FPS 基准
+        const BASE_FPS = 60;
+        
+        function update(dt) {
             if (gameState === 'PAUSED') return;
 
-            // 时缓处理
-            let timeStep = 0.05;
-            if (slowMotionActive) {
-                timeStep *= 0.5;
-                slowMotionTimer--;
-                if (slowMotionTimer <= 0) {
-                    slowMotionActive = false;
-                    gameSpeed *= 2; // 恢复速度
+            // 所有时间相关的增量乘以 dt
+            time += 0.05 * dt;
+            frames++; // frames 用于计数，不影响物理，不需要乘 dt
+            
+            emitIntenseTrailParticles();
+            
+            if (isFeverMode) {
+                feverTimer -= dt; // Fever 倒计时使用 dt
+                feverEnergy = (feverTimer / FEVER_DURATION) * MAX_FEVER_ENERGY;
+                updateEnergyBar();
+                if (feverTimer <= 0) {
+                    endFeverMode();
                 }
             }
-
-            time += timeStep;
-            frames++;
             
-            updateBackground();
+            updateBackground(dt);
             
             if (gameState === 'PLAYING') {
-                player.update();
+                const scoreDiff = scoreColorChangeThreshold - score;
+                const scoreEl = document.getElementById('score-val');
                 
-                // 障碍物生成逻辑
+                if (scoreDiff <= 10 && scoreDiff > 0 && !isFeverMode) {
+                    scoreEl.classList.add('score-glitch');
+                } else {
+                    scoreEl.classList.remove('score-glitch');
+                }
+                
+                if (score >= scoreColorChangeThreshold) {
+                    changeColorScheme();
+                }
+                
+                if (Math.random() < 0.005) hovercars.push(new Hovercar());
+                
+                rainSystem.update(dt);
+                player.update(dt);
+                
                 const lastOb = obstacles.length > 0 ? obstacles[obstacles.length - 1] : null;
+                const distMult = isFeverMode ? 1.5 : 1.0;
                 
-                if (!lastOb || (width - lastOb.x >= gameConfig.obstacleDistance)) {
+                if (!lastOb || (width - lastOb.x >= gameConfig.obstacleDistance * distMult)) {
                     const prevH = lastOb ? lastOb.topHeight : undefined;
                     obstacles.push(new Obstacle(prevH));
                     
-                    // 随机生成道具 (20%概率)
-                    if (Math.random() > 0.8) {
-                        const types = ['SHIELD', 'SLOW', 'BONUS'];
-                        const type = types[Math.floor(Math.random() * types.length)];
-                        // 在障碍物空隙中间生成
+                    if (Math.random() > 0.7) {
+                        const rand = Math.random();
+                        let type = rand < 0.90 ? 'BONUS' : 'SHIELD'; 
                         const py = (obstacles[obstacles.length-1].topHeight + obstacles[obstacles.length-1].bottomY) / 2;
-                        // 稍微错开一点X轴
                         powerUps.push(new PowerUp(width + 50, py, type));
                     }
                 }
 
                 obstacles.forEach((ob, index) => {
-                    ob.update();
-                    if (ob.markedForDeletion) {
-                        obstacles.splice(index, 1);
-                    }
+                    ob.update(dt);
+                    if (ob.markedForDeletion) obstacles.splice(index, 1);
                 });
                 
-                // 道具更新
                 powerUps.forEach((p, index) => {
-                    p.update();
-                    if (p.markedForDeletion) {
-                        powerUps.splice(index, 1);
-                    }
+                    p.update(dt);
+                    if (p.markedForDeletion) powerUps.splice(index, 1);
+                });
+                
+                hovercars.forEach((c, index) => {
+                    c.update(dt);
+                    if (c.markedForDeletion) hovercars.splice(index, 1);
                 });
                 
             } else if (gameState === 'GAMEOVER') {
                  if (player.y < height - player.radius) {
-                     player.y += 10;
-                     player.rotation += 0.2;
+                     player.y += 10 * dt;
+                     player.rotation += 0.2 * dt;
                  }
-            } else if (gameState === 'START') {
-                // 更新悬浮动画位置
-                player.y = height / 2 + Math.sin(time * 2) * 20;
-            } else if (gameState === 'MODE_SELECT') {
-                // 更新背景飞机位置
+            } else if (gameState === 'START' || gameState === 'MODE_SELECT') {
                 player.y = height / 2 + Math.sin(time * 2) * 20;
             }
 
             particles.forEach((p, index) => {
-                p.update();
+                p.update(dt);
                 if (p.life <= 0) particles.splice(index, 1);
             });
         }
@@ -1773,56 +2341,84 @@
         function draw() {
             if (gameState === 'PAUSED') return; 
 
-            // 1. 绘制背景和拖尾层
-            ctx.fillStyle = 'rgba(5, 5, 16, 0.6)'; 
+            const bgAlpha = isFeverMode ? 0.3 : 0.6;
+            ctx.fillStyle = `rgba(5, 5, 16, ${bgAlpha})`; 
             ctx.fillRect(0, 0, width, height);
 
             ctx.save();
-            // 屏幕震动
-            if (gameState === 'GAMEOVER' && Math.random() > 0.8) {
-                const shake = 5;
+            
+            if ((gameState === 'GAMEOVER' || isFeverMode) && Math.random() > 0.8) {
+                const shake = isFeverMode ? 3 : 5;
                 ctx.translate(Math.random()*shake - shake/2, Math.random()*shake - shake/2);
             }
 
-            // 2. 绘制场景元素
             drawBackground();
             
+            hovercars.forEach(c => c.draw()); 
+            rainSystem.draw();
             obstacles.forEach(ob => ob.draw());
             powerUps.forEach(p => p.draw());
             particles.forEach(p => p.draw());
-            
-            // 绘制玩家
             player.draw();
 
             ctx.restore();
             
-            // 后期处理效果
-            if (Math.random() > 0.98 || gameState === 'GAMEOVER') {
+            // 优化：仅在高画质下启用昂贵的后处理滤镜
+            // 这是一个极大的性能消耗点，在手机上禁用可显著提升帧率
+            if (gameConfig.quality === 'HIGH' && (Math.random() > 0.98 || gameState === 'GAMEOVER' || isFeverMode)) {
                 ctx.save();
                 ctx.globalCompositeOperation = 'lighter';
-                ctx.globalAlpha = 0.05;
+                ctx.globalAlpha = isFeverMode ? 0.1 : 0.05; 
                 ctx.drawImage(canvas, -5, 0); 
                 ctx.drawImage(canvas, 5, 0);  
                 ctx.restore();
             }
         }
 
-        function loop() {
-            update();
-            draw();
+        // =========================================
+        // 核心：Delta Time 游戏循环
+        // =========================================
+        function loop(timestamp) {
             requestAnimationFrame(loop);
+
+            // 计算时间间隔
+            now = timestamp;
+            elapsed = now - then;
+
+            // 帧率节流 (Throttling)
+            if (elapsed > fpsInterval) {
+                // 计算 Delta Time 系数 (相对于 60fps)
+                let dt = Math.min(elapsed / (1000 / BASE_FPS), 3.0);
+
+                // 校准下一帧时间
+                then = now - (elapsed % fpsInterval);
+
+                update(dt);
+                draw();
+            }
         }
 
         window.addEventListener('resize', resize);
-        window.addEventListener('keydown', handleInput);
-        window.addEventListener('touchstart', handleInput, {passive: false});
-        window.addEventListener('mousedown', handleInput);
+        window.addEventListener('keydown', handleSpecialKeys); 
+        window.addEventListener('keydown', handleInputDown);   
+        window.addEventListener('keyup', handleInputUp);
+        window.addEventListener('mousedown', handleInputDown);
+        window.addEventListener('mouseup', handleInputUp);
+        window.addEventListener('touchstart', handleInputDown, {passive: false});
+        window.addEventListener('touchend', handleInputUp);
+        window.addEventListener('contextmenu', (e) => { e.preventDefault(); }); 
 
-        // 初始化配置
-        bindConfigUI();
+        // 安全初始化
+        try {
+            // 初始默认为 PC 配置，但未开始游戏
+            fpsInterval = 1000 / 60; // 默认防错
+            then = window.performance.now();
+            bindConfigUI();
+        } catch(e) { console.error("Init config failed:", e); }
+        
         resize();
         initBackground();
-        loop(); 
+        requestAnimationFrame(loop);
 
     </script>
 </body>
